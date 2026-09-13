@@ -18,6 +18,10 @@ namespace
 // The D-Bus service KRunner auto-activates and talks to; must match the service file and the
 // .desktop X-Plasma-DBusRunner-Service.
 const QString s_serviceName = QStringLiteral("io.github.dcog989.remindme");
+
+// Grace period for the idle-activation fallback below: long enough for any pending D-Bus call
+// to arrive before the process gives up and exits.
+constexpr int idleQuitFallbackMs = 30 * 1000;
 }
 
 int main(int argc, char **argv)
@@ -131,7 +135,7 @@ int main(int argc, char **argv)
     // One-shot fallback for the single case that emits no count change: an activation that
     // only queried an already-empty state. Give any pending call time to arrive, then exit
     // if the service is still idle instead of lingering as a permanent background process.
-    QTimer::singleShot(30 * 1000, &app, [&engine, &openDialogCount]() {
+    QTimer::singleShot(idleQuitFallbackMs, &app, [&engine, &openDialogCount]() {
         if (engine.List().isEmpty() && openDialogCount == 0) {
             QDBusConnection::sessionBus().unregisterService(s_serviceName);
             QCoreApplication::quit();
