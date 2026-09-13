@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 David Laws
-# SPDX-License-Identifier: CC0-1.0
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
 # cocogitto configuration: Conventional Commits, changelog and version bumps.
 # Commit messages are checked by the lefthook `commit-msg` hook; releases are

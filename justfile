@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 David Laws
-# SPDX-License-Identifier: CC0-1.0
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
 # Task runner for remindme. Run `just` to list recipes.
 # Build configuration lives in CMakePresets.json; hooks live in lefthook.yml.
@@ -83,12 +83,6 @@ lint:
     step() { printf '==> %s\n' "$*"; "$@" || status=1; }
     skip() { printf -- '--- skip: %s\n' "$*"; }
 
-    if have reuse && { [ -e REUSE.toml ] || [ -d .reuse ]; }; then
-        step reuse lint
-    else
-        skip "reuse lint (not installed or no REUSE config yet)"
-    fi
-
     if have typos; then step typos .; else skip "typos"; fi
 
     sh=$(git ls-files '*.sh' '*.bash')
@@ -112,7 +106,7 @@ doctor:
     set -uo pipefail
     missing=0
     for tool in cmake ninja clang-format clang-tidy cog lefthook \
-                just reuse typos shellcheck shfmt yamllint editorconfig-checker gitleaks; do
+                just typos shellcheck shfmt yamllint editorconfig-checker gitleaks; do
         if command -v "$tool" >/dev/null 2>&1; then
             printf 'ok      %s\n' "$tool"
         else

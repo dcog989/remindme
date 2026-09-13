@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 David Laws
-# SPDX-License-Identifier: CC0-1.0
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
 # clang-tidy configuration. Run via `just tidy` (needs a configured build with
 # CMAKE_EXPORT_COMPILE_COMMANDS=ON, which the CMake presets enable).

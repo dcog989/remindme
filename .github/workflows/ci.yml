@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 David Laws
-# SPDX-License-Identifier: CC0-1.0
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
 # Build, test and lint the plugin on Arch Linux (the reference platform).
 
@@ -39,15 +39,12 @@ jobs:
       - name: Install tools
         run: |
           pacman -Syu --noconfirm --needed \
-            git clang reuse typos shellcheck yamllint editorconfig-checker
+            git clang typos shellcheck yamllint editorconfig-checker
       - uses: actions/checkout@v4
       - name: clang-format
         run: |
           files=$(git ls-files '*.c' '*.cc' '*.cpp' '*.cxx' '*.h' '*.hpp' '*.hxx')
           [ -z "$files" ] || clang-format --dry-run --Werror $files
-      - name: REUSE
-        run: |
-          [ ! -e REUSE.toml ] || reuse lint
       - name: typos
         run: typos .
       - name: shellcheck

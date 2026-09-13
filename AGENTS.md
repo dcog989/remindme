@@ -1,5 +1,3 @@
-<!-- SPDX-FileCopyrightText: 2026 David Laws -->
-<!-- SPDX-License-Identifier: CC0-1.0 -->
 # Agent Directives
 
 ## Project Specifics
@@ -9,7 +7,7 @@
 - Goal: a **standalone, third-party user plugin** distributed through the [KDE Store](https://store.kde.org/) and installable via KRunner's **Get New Plugins** flow; not part of KDE Plasma.
 - Status: migration from the in-tree plasma-workspace plugin (`plasma-workspace/runners/remindme/`, kept locally as the read-only gitignored extraction source) is complete. One `krunner-remindme` process is the engine, the KRunner DBus2 runner and the alarm window.
 - Tech: C++20, Qt 6.9+, KDE Frameworks 6, CMake 3.29+, Extra CMake Modules (ECM)
-- License: **GPL-3.0-or-later** for all C++/build sources; CC0-1.0 for data files (`.desktop` metadata, `.notifyrc`) and tooling config. Per-file SPDX headers and `REUSE.toml` are authoritative.
+- License: **GPL-3.0-or-later**, declared in a single `LICENSE` file at the repo root; per-file SPDX headers where present match it.
 
 ### File Access
 
@@ -33,14 +31,12 @@ remindme/
 │   └── runner/                          # org.kde.krunner1 D-Bus runner adaptor
 │       ├── remindmeadaptor.{h,cpp}      # Match/Run/Actions/Config/Teardown
 │       └── remotematch.h                # D-Bus wire types for the runner protocol
-├── data/                                # installed data files (CC0-1.0)
+├── data/                                # installed data files
 │   ├── plasma-runner-remindme.desktop   # DBus2 runner metadata
 │   └── krunner-remindme.notifyrc
 ├── autotests/                           # ctest: remindmetimetest, remindmeenginetest, remindmeautostarttest, remindmeintegrationtest
 ├── po/                                  # translations (Messages.sh + catalogs)
 ├── packaging/                           # build.sh / install.sh / uninstall.sh / package.sh
-├── LICENSES/                            # REUSE license texts
-├── REUSE.toml
 └── README.md
 ```
 

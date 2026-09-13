@@ -143,8 +143,6 @@ remindme/
 ├── autotests/                  # ctest suite
 ├── packaging/                  # build.sh / install.sh / uninstall.sh / package.sh
 ├── po/                         # translations (Messages.sh + catalogs)
-├── LICENSES/                   # REUSE license texts
-├── REUSE.toml
 └── README.md
 ```
 
@@ -153,7 +151,7 @@ remindme/
 - Configure, build and test: `just ci` (or `cmake --workflow --preset user`).
 - Test only: `just test` (or `ctest --preset user`).
 - Format C++ and shell sources: `just format`; verify with `just format-check`.
-- Lint everything available: `just lint` (REUSE, typos, shellcheck, yamllint,
+- Lint everything available: `just lint` (typos, shellcheck, yamllint,
   editorconfig-checker, clang-format). `just doctor` lists missing tools.
 - Static analysis: `just tidy` (`clang-tidy` over the configured build).
 - Rebuild, reinstall and relaunch KRunner: `just reload`.
@@ -181,14 +179,13 @@ bumps the version and creates a `v*` tag.
 Handy Arch packages:
 
 ```sh
-paru -S just lefthook cocogitto reuse typos shellcheck shfmt yamllint \
+paru -S just lefthook cocogitto typos shellcheck shfmt yamllint \
         gitleaks editorconfig-checker clang
 ```
 
 ## License
 
-GPL-3.0-or-later. Data files (runner metadata, notification config) are
-CC0-1.0; per-file SPDX headers and `REUSE.toml` are authoritative.
+GPL-3.0-or-later. See [`LICENSE`](LICENSE).
 
 ## Links
 
