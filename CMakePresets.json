@@ -19,7 +19,7 @@
     {
       "name": "user",
       "displayName": "User prefix (~/.local, Debug)",
-      "description": "Install into the user's home prefix; requires QT_PLUGIN_PATH when launching KRunner.",
+      "description": "Install into the user's home prefix; no sudo or QT_PLUGIN_PATH needed for a D-Bus runner.",
       "inherits": "base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",

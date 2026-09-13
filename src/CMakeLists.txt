@@ -1,0 +1,50 @@
+# SPDX-FileCopyrightText: 2026 David Laws
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# One process is the timer engine, the KRunner DBus runner and the alarm window. It is registered
+# as the io.github.dcog989.remindme D-Bus service, which KRunner auto-activates on demand.
+add_executable(krunner-remindme
+    engine/main.cpp
+    engine/remindmeengine.cpp
+    engine/remindmeengine.h
+    engine/remindmetime.cpp
+    engine/remindmetime.h
+    engine/remindmealarmdialog.cpp
+    engine/remindmealarmdialog.h
+    engine/remindmeautostart.cpp
+    engine/remindmeautostart.h
+    runner/remindmeadaptor.cpp
+    runner/remindmeadaptor.h
+    runner/remotematch.h
+)
+
+target_include_directories(krunner-remindme PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/engine
+    ${CMAKE_CURRENT_SOURCE_DIR}/runner
+)
+
+target_link_libraries(krunner-remindme PRIVATE
+    Qt6::Core
+    Qt6::DBus
+    Qt6::Widgets
+    KF6::CoreAddons
+    KF6::I18n
+    KF6::Notifications
+    KF6::ConfigCore
+)
+
+install(TARGETS krunner-remindme DESTINATION ${KDE_INSTALL_LIBEXECDIR_KF})
+
+ecm_generate_dbus_service_file(
+    NAME io.github.dcog989.remindme
+    EXECUTABLE ${KDE_INSTALL_FULL_LIBEXECDIR_KF}/krunner-remindme
+    DESTINATION ${KDE_INSTALL_DBUSSERVICEDIR}
+)
+
+install(FILES ${CMAKE_SOURCE_DIR}/data/plasma-runner-remindme.desktop
+    DESTINATION ${KDE_INSTALL_DATADIR}/krunner/dbusplugins
+)
+
+install(FILES ${CMAKE_SOURCE_DIR}/data/krunner-remindme.notifyrc
+    DESTINATION ${KDE_INSTALL_KNOTIFYRCDIR}
+)

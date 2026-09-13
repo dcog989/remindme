@@ -1,0 +1,28 @@
+/*
+    SPDX-FileCopyrightText: 2026 David Laws
+
+    SPDX-License-Identifier: GPL-3.0-or-later
+*/
+
+#pragma once
+
+#include <QString>
+
+// Manages the XDG autostart entry that relaunches the reminder helper next login. The helper
+// enables the entry while it holds at least one active timer and disables it when the last timer
+// is gone, so a timer that is still running when the session ends is fired on the next login while
+// an idle helper is not started at every login. Mirrors KDE's PlasmaAutostart::setAutostarts()
+// (startkde/plasmaautostart) by toggling the entry's "Hidden" key in the user autostart directory.
+class RemindmeAutostart
+{
+public:
+    // The directory is overridable so tests can isolate the entry; the default is the user autostart dir.
+    explicit RemindmeAutostart(QString autostartDir = {});
+    ~RemindmeAutostart();
+
+    void setActive(bool active);
+
+private:
+    QString m_autostartDir;
+    QString m_entryPath;
+};

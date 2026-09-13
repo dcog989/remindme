@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: 2026 David Laws
+# SPDX-License-Identifier: CC0-1.0
+
+[Global]
+Name=Remind me
+IconName=kronometer
+Comment=Timer reminders
+
+[Event/remindme]
+Name=Timer finished
+Comment=Sound played when a remindme timer expires
+IconName=kronometer
+Action=Sound
+# Resolved against the user's configured sound theme (same event name as the timer applet)
+Sound=alarm-clock-elapsed

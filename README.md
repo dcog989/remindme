@@ -49,11 +49,11 @@ Trigger words: `remindme`, `rme` (case-insensitive).
 - "Cancel by message" matches the message *exactly* (case-sensitive), so a short
   typo cannot cancel a large set of timers. Use `rme cancel <id>` or
   `rme cancel #<id>` for a specific timer.
-- On expiry the helper opens an alarm window with the message plus Snooze and
-  Dismiss, and plays the looping alarm sound until the window is closed.
-- Timers survive KRunner restarts and session logout: the engine runs in a D-Bus
-  helper process, persists timers to disk, and uses wall-clock deadlines (epoch),
-  so suspend and restart are handled naturally.
+- On expiry the alarm window opens with the message plus Snooze and Dismiss, and
+  plays a looping alarm sound until the window is closed.
+- Timers survive KRunner restarts and session logout: the runner process owns the
+  engine, persists timers to disk, and uses wall-clock deadlines (epoch), so
+  suspend and restart are handled naturally.
 
 ## Install
 
@@ -66,9 +66,10 @@ Trigger words: `remindme`, `rme` (case-insensitive).
 
 ### From source
 
-Build dependencies: a C++20 compiler, CMake 3.29+, Qt 6.9+, and KDE Frameworks 6
-(`Runner`, `CoreAddons`, `I18n`, `Notifications`, `ConfigCore`), plus
+Build dependencies: a C++20 compiler, CMake 3.29+, Qt 6.9+, KDE Frameworks 6
+(`CoreAddons`, `I18n`, `Notifications`, `Config`) and
 [Extra CMake Modules](https://invent.kde.org/frameworks/extra-cmake-modules).
+Building the tests additionally needs `KRunner` (for `AbstractRunnerTest`).
 
 The build is driven by [CMake presets](CMakePresets.json), with a thin
 [`justfile`](justfile) for convenience. If you have
@@ -92,33 +93,34 @@ Presets: `user` (`~/.local`, Debug), `release`, `system` (`/usr`),
 `asan` (ASan + UBSan). Configure, build and test in one go with
 `just ci <preset>` or `cmake --workflow --preset user`.
 
-The packaging helpers wrap the same steps and print launch instructions:
+Because `remindme` is a D-Bus runner, a `~/.local` install needs no
+`QT_PLUGIN_PATH` and no sudo: KRunner scans
+`~/.local/share/krunner/dbusplugins`, D-Bus scans
+`~/.local/share/dbus-1/services`, and the service `Exec=` is an absolute path.
+Restart KRunner afterwards so it reloads the runner list:
+
+```sh
+kquitapp6 krunner && krunner &
+```
+
+The packaging helpers wrap the same steps and restart KRunner:
 
 ```sh
 packaging/build.sh
-packaging/install.sh
+packaging/install.sh            # or: packaging/install.sh --system
+packaging/uninstall.sh          # driven by the CMake install manifest
 ```
-
-`-DKDE_INSTALL_USE_QT_SYS_PATHS=OFF` keeps the plugin under the chosen prefix
-(e.g. `~/.local/lib/plugins/kf6/krunner/`). Installing into a user prefix means
-KRunner must be told where the plugin lives:
-
-```sh
-kquitapp6 krunner
-QT_PLUGIN_PATH="$HOME/.local/lib/plugins" krunner &
-```
-
-Installing system-wide (with a system prefix, or `KDE_INSTALL_USE_QT_SYS_PATHS=ON`)
-avoids the `QT_PLUGIN_PATH` requirement, since KRunner then finds the plugin in
-the standard Qt plugin directory.
 
 ## Tech Stack
 
 - C++20, Qt 6.9+, KDE Frameworks 6, CMake 3.29+, Extra CMake Modules.
-- `RemindmeRunner` is a standard KRunner C++ plugin loaded via
-  `KPluginMetaData`/`KPluginFactory`.
-- The timer engine runs in a separate D-Bus-activated helper process
-  (`krunner-remindme`) so timers keep ticking with KRunner closed.
+- One executable is the timer engine, the KRunner runner and the alarm window.
+  It is exposed to KRunner through the `org.kde.krunner1` D-Bus runner protocol
+  (`X-Plasma-API=DBus2`) and auto-activated from
+  `io.github.dcog989.remindme.service`; no compiled KRunner plugin is involved.
+- Matching reads the engine in-process, so a query never crosses D-Bus. The
+  process persists timers to disk and exits when idle; D-Bus activation brings it
+  back on demand.
 
 ## Project Layout
 
@@ -126,23 +128,21 @@ the standard Qt plugin directory.
 remindme/
 ├── CMakeLists.txt              # top-level project (ECM, KF6, options, subdirs)
 ├── src/
-│   ├── common/                 # shared by runner + helper → remindme_common
-│   │   ├── remindmedbus.{h,cpp}        # D-Bus marshalling for TimerInfo
+│   ├── engine/                 # timer engine, alarm window, autostart, entry point
+│   │   ├── main.cpp                    # D-Bus service + engine + adaptor wiring
+│   │   ├── remindmeengine.{h,cpp}      # timer engine (wall-clock deadlines, persistence)
 │   │   ├── remindmetime.{h,cpp}        # duration parser
-│   │   └── org.kde.remindme.xml        # D-Bus interface definition
-│   ├── runner/                 # KRunner plugin (remindme.so)
-│   │   ├── remindmerunner.{h,cpp}
-│   │   ├── remindmeclient.{h,cpp}
-│   │   └── plasma-runner-remindme.json # embedded KPlugin metadata
-│   └── helper/                 # krunner-remindme D-Bus helper executable
-│       ├── remindmeengine.{h,cpp}
-│       ├── remindmehelpermain.cpp
-│       ├── remindmealarmdialog.{h,cpp}
-│       ├── remindmeautostart.{h,cpp}
-│       └── krunner-remindme.notifyrc
+│   │   ├── remindmealarmdialog.{h,cpp} # Snooze/Dismiss window
+│   │   └── remindmeautostart.{h,cpp}   # session autostart toggling
+│   └── runner/
+│       ├── remindmeadaptor.{h,cpp}     # org.kde.krunner1 Match/Run/Actions/Config
+│       └── remotematch.h               # D-Bus wire types for the runner protocol
+├── data/
+│   ├── plasma-runner-remindme.desktop  # DBus2 runner metadata
+│   └── krunner-remindme.notifyrc       # notification/sound config
 ├── autotests/                  # ctest suite
+├── packaging/                  # build.sh / install.sh / uninstall.sh / package.sh
 ├── po/                         # translations (Messages.sh + catalogs)
-├── packaging/                  # build.sh / install.sh / package.sh / D-Bus service template
 ├── LICENSES/                   # REUSE license texts
 ├── REUSE.toml
 └── README.md
@@ -187,11 +187,12 @@ paru -S just lefthook cocogitto reuse typos shellcheck shfmt yamllint \
 
 ## License
 
-GPL-3.0-or-later. Data files (plugin metadata, notification config, D-Bus
-interface XML) are CC0-1.0 where marked; per-file SPDX headers are authoritative.
+GPL-3.0-or-later. Data files (runner metadata, notification config) are
+CC0-1.0; per-file SPDX headers and `REUSE.toml` are authoritative.
 
 ## Links
 
+- Source: <https://github.com/dcog989/remindme>
 - Inspiration: <https://store.kde.org/p/1081014/>
 - KRunner plugin development: <https://develop.kde.org/docs/plasma/krunner/>
 - Discussion: <https://discuss.kde.org/t/is-there-a-krunner-timer/49132>

@@ -136,10 +136,10 @@ package:
     fi
     exec bash packaging/package.sh
 
-# Rebuild, reinstall and relaunch KRunner with the local plugin
+# Rebuild, reinstall and relaunch KRunner with the local runner
 reload preset="user":
     @kquitapp6 krunner || true
     @pkill -f 'libexec/kf6/krunner-remindme' || true
     cmake --build --preset {{preset}}
     cmake --install build/{{preset}}
-    @QT_PLUGIN_PATH="$HOME/.local/lib/plugins" krunner &
+    @krunner &

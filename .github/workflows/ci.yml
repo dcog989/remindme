@@ -1,8 +1,7 @@
 # SPDX-FileCopyrightText: 2026 David Laws
 # SPDX-License-Identifier: CC0-1.0
 #
-# Build and lint the plugin on Arch Linux (the reference platform).
-# The build job goes green once the sources are extracted into this repository.
+# Build, test and lint the plugin on Arch Linux (the reference platform).
 
 name: CI
 
