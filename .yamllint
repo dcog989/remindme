@@ -1,0 +1,25 @@
+# SPDX-FileCopyrightText: 2026 David Laws
+# SPDX-License-Identifier: CC0-1.0
+---
+extends: default
+
+ignore: |
+  .git/
+  build/
+  dist/
+  plasma-workspace/
+  _install/
+
+rules:
+  line-length: disable
+  document-start: disable
+  truthy:
+    check-keys: false
+  comments:
+    min-spaces-from-content: 1
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+  brackets:
+    min-spaces-inside: 0
+    max-spaces-inside: 1

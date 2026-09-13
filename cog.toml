@@ -1,0 +1,35 @@
+# SPDX-FileCopyrightText: 2026 David Laws
+# SPDX-License-Identifier: CC0-1.0
+#
+# cocogitto configuration: Conventional Commits, changelog and version bumps.
+# Commit messages are checked by the lefthook `commit-msg` hook; releases are
+# cut with `cog bump`.
+
+from_latest_tag = false
+ignore_merge_commits = true
+ignore_fixup_commits = true
+disable_changelog = false
+disable_bump_commit = false
+branch_whitelist = ["main"]
+skip_ci = "[skip ci]"
+skip_untracked = false
+tag_prefix = "v"
+
+pre_bump_hooks = []
+post_bump_hooks = []
+
+[commit_types]
+feat = { changelog_title = "Features" }
+fix = { changelog_title = "Bug Fixes" }
+perf = { changelog_title = "Performance" }
+refactor = { changelog_title = "Refactoring" }
+docs = { changelog_title = "Documentation" }
+build = { changelog_title = "Build" }
+ci = { changelog_title = "CI" }
+test = { changelog_title = "Tests" }
+style = { changelog_title = "Style", omit_from_changelog = true }
+chore = { changelog_title = "Chores", omit_from_changelog = true }
+revert = { changelog_title = "Reverts" }
+
+[changelog]
+path = "CHANGELOG.md"

@@ -1,0 +1,13 @@
+{
+  "Exclude": [
+    "^build/",
+    "^\\.git/",
+    "^dist/",
+    "^\\.docs/",
+    "^plasma-workspace/",
+    "^_install/"
+  ],
+  "Disable": {
+    "Indentation": false
+  }
+}

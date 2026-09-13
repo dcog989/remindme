@@ -1,0 +1,119 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 29,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "BUILD_TESTING": "ON"
+      }
+    },
+    {
+      "name": "user",
+      "displayName": "User prefix (~/.local, Debug)",
+      "description": "Install into the user's home prefix; requires QT_PLUGIN_PATH when launching KRunner.",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_INSTALL_PREFIX": "$env{HOME}/.local",
+        "KDE_INSTALL_USE_QT_SYS_PATHS": "OFF"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "User prefix (~/.local, Release)",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_INSTALL_PREFIX": "$env{HOME}/.local",
+        "KDE_INSTALL_USE_QT_SYS_PATHS": "OFF"
+      }
+    },
+    {
+      "name": "system",
+      "displayName": "System prefix (/usr, Release)",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_INSTALL_PREFIX": "/usr",
+        "KDE_INSTALL_USE_QT_SYS_PATHS": "ON"
+      }
+    },
+    {
+      "name": "asan",
+      "displayName": "Debug with ASan + UBSan",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_INSTALL_PREFIX": "$env{HOME}/.local",
+        "KDE_INSTALL_USE_QT_SYS_PATHS": "OFF",
+        "ECM_ENABLE_SANITIZERS": "address;undefined"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "user",
+      "configurePreset": "user"
+    },
+    {
+      "name": "release",
+      "configurePreset": "release"
+    },
+    {
+      "name": "asan",
+      "configurePreset": "asan"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "user",
+      "configurePreset": "user",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "asan",
+      "configurePreset": "asan",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "user",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "user"
+        },
+        {
+          "type": "build",
+          "name": "user"
+        },
+        {
+          "type": "test",
+          "name": "user"
+        }
+      ]
+    }
+  ]
+}

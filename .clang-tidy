@@ -1,0 +1,32 @@
+# SPDX-FileCopyrightText: 2026 David Laws
+# SPDX-License-Identifier: CC0-1.0
+#
+# clang-tidy configuration. Run via `just tidy` (needs a configured build with
+# CMAKE_EXPORT_COMPILE_COMMANDS=ON, which the CMake presets enable).
+---
+Checks: >
+  -*,
+  bugprone-*,
+  clang-analyzer-*,
+  performance-*,
+  portability-*,
+  modernize-*,
+  -modernize-use-trailing-return-type,
+  -modernize-use-nodiscard,
+  -modernize-return-braced-init-list,
+  -modernize-avoid-c-arrays,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-narrowing-conversions,
+  -bugprone-implicit-widening-of-multiplication-result,
+  -bugprone-unchecked-optional-access,
+  -bugprone-infinite-loop
+WarningsAsErrors: ""
+HeaderFilterRegex: ".*"
+FormatStyle: file
+CheckOptions:
+  modernize-use-nullptr.NullMacros: "NULL"
+  readability-identifier-naming.ClassCase: CamelCase
+  readability-identifier-naming.FunctionCase: camelBack
+  readability-identifier-naming.MemberCase: camelBack
+  readability-identifier-naming.PrivateMemberPrefix: m_
+  readability-identifier-naming.VariableCase: camelBack

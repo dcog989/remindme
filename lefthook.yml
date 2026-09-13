@@ -1,0 +1,75 @@
+# SPDX-FileCopyrightText: 2026 David Laws
+# SPDX-License-Identifier: CC0-1.0
+#
+# Git hooks for remindme. Install once with:
+#
+#     lefthook install
+#
+# Jobs whose tool is not installed (or whose config does not exist yet) are
+# skipped, so the repository stays usable with a partial toolchain:
+# run `just doctor` to see what is missing.
+min_version: 2.0.0
+
+pre-commit:
+  parallel: true
+  jobs:
+    - name: clang-format
+      glob: "*.{c,cc,cpp,cxx,h,hpp,hxx}"
+      run: clang-format -i {staged_files}
+      stage_fixed: true
+      skip:
+        - run: "! command -v clang-format >/dev/null 2>&1"
+
+    - name: typos
+      run: typos {staged_files}
+      skip:
+        - run: "! command -v typos >/dev/null 2>&1"
+
+    - name: reuse
+      run: reuse lint
+      skip:
+        - run: "test ! -e REUSE.toml && test ! -d .reuse"
+        - run: "! command -v reuse >/dev/null 2>&1"
+
+    - name: shellcheck
+      glob: "*.{sh,bash}"
+      run: shellcheck {staged_files}
+      skip:
+        - run: "! command -v shellcheck >/dev/null 2>&1"
+
+    - name: shfmt
+      glob: "*.{sh,bash}"
+      run: shfmt -w {staged_files}
+      stage_fixed: true
+      skip:
+        - run: "! command -v shfmt >/dev/null 2>&1"
+
+    - name: yamllint
+      glob: "*.{yml,yaml}"
+      run: yamllint {staged_files}
+      skip:
+        - run: "! command -v yamllint >/dev/null 2>&1"
+
+    - name: editorconfig-checker
+      run: editorconfig-checker {staged_files}
+      skip:
+        - run: "! command -v editorconfig-checker >/dev/null 2>&1"
+
+    - name: gitleaks
+      run: gitleaks protect --staged --no-banner
+      skip:
+        - run: "! command -v gitleaks >/dev/null 2>&1"
+
+commit-msg:
+  jobs:
+    - name: conventional-commit
+      run: cog verify --file {1} --ignore-merge-commits --ignore-fixup-commits
+      skip:
+        - run: "! command -v cog >/dev/null 2>&1"
+
+pre-push:
+  jobs:
+    - name: build-and-test
+      run: cmake --workflow --preset user
+      skip:
+        - run: "test ! -e CMakeLists.txt"

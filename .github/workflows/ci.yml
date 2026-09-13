@@ -1,0 +1,61 @@
+# SPDX-FileCopyrightText: 2026 David Laws
+# SPDX-License-Identifier: CC0-1.0
+#
+# Build and lint the plugin on Arch Linux (the reference platform).
+# The build job goes green once the sources are extracted into this repository.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build & test (KF6)
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Install dependencies
+        run: |
+          pacman -Syu --noconfirm --needed \
+            base-devel cmake ninja ccache \
+            qt6-base krunner kcoreaddons ki18n knotifications kconfig \
+            extra-cmake-modules
+      - uses: actions/checkout@v4
+      - name: Configure, build and test
+        run: cmake --workflow --preset user
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Install tools
+        run: |
+          pacman -Syu --noconfirm --needed \
+            git clang reuse typos shellcheck yamllint editorconfig-checker
+      - uses: actions/checkout@v4
+      - name: clang-format
+        run: |
+          files=$(git ls-files '*.c' '*.cc' '*.cpp' '*.cxx' '*.h' '*.hpp' '*.hxx')
+          [ -z "$files" ] || clang-format --dry-run --Werror $files
+      - name: REUSE
+        run: |
+          [ ! -e REUSE.toml ] || reuse lint
+      - name: typos
+        run: typos .
+      - name: shellcheck
+        run: |
+          files=$(git ls-files '*.sh' '*.bash')
+          [ -z "$files" ] || shellcheck $files
+      - name: yamllint
+        run: yamllint .
+      - name: editorconfig
+        run: editorconfig-checker
