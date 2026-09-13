@@ -142,7 +142,7 @@ remindme/
 │       └── krunner-remindme.notifyrc
 ├── autotests/                  # ctest suite
 ├── po/                         # translations (Messages.sh + catalogs)
-├── packaging/                  # build.sh / install.sh / D-Bus service template
+├── packaging/                  # build.sh / install.sh / package.sh / D-Bus service template
 ├── LICENSES/                   # REUSE license texts
 ├── REUSE.toml
 └── README.md
