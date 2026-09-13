@@ -184,7 +184,7 @@ void RemindmeAdaptor::addCreateMatch(RemoteMatches &matches, const QString &term
     const QDateTime deadline = QDateTime::currentDateTime().addSecs(duration.seconds);
     // Hide seconds only when hours are displayed, folding them into the minutes (nearest);
     // formatSpelloutDuration otherwise silently drops them. Below an hour it shows them.
-    const qint64 durationMs = quint64(duration.seconds) * 1000;
+    const qint64 durationMs = qint64(duration.seconds) * 1000;
     const QString durationText = duration.seconds >= 3600 ? KFormat().formatSpelloutDuration(qint64((duration.seconds + 30) / 60) * 60 * 1000)
                                                           : KFormat().formatSpelloutDuration(durationMs);
     QString text = i18n("Set timer for %1", durationText).toHtmlEscaped();
