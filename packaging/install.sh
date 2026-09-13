@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# SPDX-FileCopyrightText: 2026 David Laws
-# SPDX-License-Identifier: GPL-3.0-or-later
 #
 # Build and install remindme, then restart KRunner so it picks up the runner.
 #

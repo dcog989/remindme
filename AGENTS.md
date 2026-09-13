@@ -7,7 +7,7 @@
 - Goal: a **standalone, third-party user plugin** distributed through the [KDE Store](https://store.kde.org/) and installable via KRunner's **Get New Plugins** flow; not part of KDE Plasma.
 - Status: migration from the in-tree plasma-workspace plugin (`plasma-workspace/runners/remindme/`, kept locally as the read-only gitignored extraction source) is complete. One `krunner-remindme` process is the engine, the KRunner DBus2 runner and the alarm window.
 - Tech: C++20, Qt 6.9+, KDE Frameworks 6, CMake 3.29+, Extra CMake Modules (ECM)
-- License: **GPL-3.0-or-later**, declared in a single `LICENSE` file at the repo root; per-file SPDX headers where present match it.
+- License: **GPL-3.0-or-later**, declared in a single `LICENSE` file at the repo root.
 
 ### File Access
 
@@ -59,7 +59,7 @@ remindme/
 - Keep one executable: the timer engine, the `org.kde.krunner1` D-Bus runner adaptor and the alarm window live in the same process. Do not reintroduce a compiled KRunner plugin, a client/marshalling layer, a second target or a helper process.
 - Tooling is committed at the repo root (`CMakePresets.json`, `justfile`, `lefthook.yml`, `cog.toml`, `.clang-format`, `.clang-tidy`, `.yamllint`, `.ecrc`). Keep it working when targets or file types change; don't add a second task runner or hook manager.
 - Commit messages follow Conventional Commits (`cog verify`). Do not bypass hooks (`--no-verify`).
-- Follow KRunner/KF6 DBus-runner conventions: SPDX headers, `#pragma once`, `QDBusAbstractAdaptor`, `QStringLiteral`, `i18n()`. The runner is a D-Bus service (`io.github.dcog989.remindme`), not a compiled plugin.
+- Follow KRunner/KF6 DBus-runner conventions: `#pragma once`, `QDBusAbstractAdaptor`, `QStringLiteral`, `i18n()`. The runner is a D-Bus service (`io.github.dcog989.remindme`), not a compiled plugin.
 - Use ECM install-dir variables (`KDE_INSTALL_*`) rather than hardcoded paths, so user- and system-prefix installs both work.
 - Emulate existing test procedures: pure-logic unit tests, and D-Bus runner integration tests via a real subprocess (`krunner_configure_test` + `AbstractRunnerTest` DBus branch). Don't invent new patterns where an existing one fits.
 - Run targeted tests, not the full `ctest` suite, on trivial changes.
@@ -100,7 +100,7 @@ remindme/
 - Logic fully implemented.
 - Existing docs updated if public interfaces changed.
 - On completion, print a concise conventional commit message in a fenced code block.
-- All source headers carry the correct SPDX license (`GPL-3.0-or-later`).
+- The project licence is GPL-3.0-or-later, declared in the root `LICENSE`.
 - Affected tests pass.
 - New/modified features have tests.
 

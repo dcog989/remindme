@@ -1,5 +1,3 @@
-# SPDX-FileCopyrightText: 2026 David Laws
-# SPDX-License-Identifier: GPL-3.0-or-later
 #
 # Task runner for remindme. Run `just` to list recipes.
 # Build configuration lives in CMakePresets.json; hooks live in lefthook.yml.

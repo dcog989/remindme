@@ -1,11 +1,9 @@
-# SPDX-FileCopyrightText: 2026 David Laws
-# SPDX-License-Identifier: GPL-3.0-or-later
 [Desktop Entry]
 Name=Remind me
 Comment=Start, list and cancel timers
 Type=Service
 Icon=kronometer
-X-KDE-PluginInfo-Author=David Laws
+X-KDE-PluginInfo-Author=dcog989
 X-KDE-PluginInfo-Name=remindme
 X-KDE-PluginInfo-Version=0.1.0
 X-KDE-PluginInfo-License=GPL-3.0-or-later

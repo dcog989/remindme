@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# SPDX-FileCopyrightText: 2026 David Laws
-# SPDX-License-Identifier: GPL-3.0-or-later
 #
 # Build the KDE Store source archive. Run from any directory; output lands in dist/.
 # The archive contains the tracked sources plus packaging/install.sh and packaging/uninstall.sh,

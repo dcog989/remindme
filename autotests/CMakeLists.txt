@@ -1,5 +1,3 @@
-# SPDX-FileCopyrightText: 2026 David Laws
-# SPDX-License-Identifier: GPL-3.0-or-later
 
 set(REMINDME_ENGINE_DIR ${CMAKE_SOURCE_DIR}/src/engine)
 

@@ -1,5 +1,3 @@
-# SPDX-FileCopyrightText: 2026 David Laws
-# SPDX-License-Identifier: GPL-3.0-or-later
 
 # One process is the timer engine, the KRunner DBus runner and the alarm window. It is registered
 # as the io.github.dcog989.remindme D-Bus service, which KRunner auto-activates on demand.

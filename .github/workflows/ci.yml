@@ -1,5 +1,3 @@
-# SPDX-FileCopyrightText: 2026 David Laws
-# SPDX-License-Identifier: GPL-3.0-or-later
 #
 # Build, test and lint the plugin on Arch Linux (the reference platform).
 
