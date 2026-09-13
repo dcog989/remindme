@@ -1,3 +1,5 @@
+<!-- SPDX-FileCopyrightText: 2026 David Laws -->
+<!-- SPDX-License-Identifier: CC0-1.0 -->
 # Agent Directives
 
 ## Project Specifics
@@ -5,9 +7,9 @@
 - Name: remindme
 - Description: A third-party (user) KRunner plugin for KDE Plasma 6. Adds a timer function: type a trigger word followed by a duration (and optional message) to start a countdown; when time is up, a dedicated alarm window pops up with Snooze (+1 min) and Dismiss. Active timers can be listed and cancelled from KRunner, and they survive KRunner restarts.
 - Goal: a **standalone, third-party user plugin** distributed through the [KDE Store](https://store.kde.org/) and installable via KRunner's **Get New Plugins** flow; not part of KDE Plasma.
-- Status: migrating from an in-tree plasma-workspace plugin (`plasma-workspace/runners/remindme/`, kept locally as the gitignored extraction source) into this standalone repository.
+- Status: migration from the in-tree plasma-workspace plugin (`plasma-workspace/runners/remindme/`, kept locally as the read-only gitignored extraction source) is complete. One `krunner-remindme` process is the engine, the KRunner DBus2 runner and the alarm window.
 - Tech: C++20, Qt 6.9+, KDE Frameworks 6, CMake 3.29+, Extra CMake Modules (ECM)
-- License: **GPL-3.0-or-later** for all C++/build sources; CC0-1.0 for data files (`.json` metadata, `.notifyrc`, D-Bus XML) where marked. Per-file SPDX headers are authoritative. Relicensing from the old LGPL-2.0-or-later headers is part of the migration.
+- License: **GPL-3.0-or-later** for all C++/build sources; CC0-1.0 for data files (`.desktop` metadata, `.notifyrc`) and tooling config. Per-file SPDX headers and `REUSE.toml` are authoritative.
 
 ### File Access
 
@@ -22,23 +24,21 @@
 remindme/
 ├── CMakeLists.txt                       # top-level project (ECM, KF6, options, subdirs)
 ├── src/
-│   ├── common/                          # shared by both targets → remindme_common
-│   │   ├── remindmedbus.{h,cpp}         # D-Bus marshalling for Remindme::TimerInfo
+│   ├── engine/                          # timer engine + alarm + entry point → krunner-remindme
+│   │   ├── main.cpp                     # D-Bus service, engine and adaptor wiring
+│   │   ├── remindmeengine.{h,cpp}       # timer engine (wall-clock deadlines, persistence)
 │   │   ├── remindmetime.{h,cpp}         # duration parser
-│   │   └── org.kde.remindme.xml         # D-Bus interface
-│   ├── runner/                          # KRunner plugin (remindme.so)
-│   │   ├── remindmerunner.{h,cpp}       # AbstractRunner
-│   │   ├── remindmeclient.{h,cpp}
-│   │   └── plasma-runner-remindme.json  # embedded KPlugin metadata
-│   └── helper/                          # krunner-remindme D-Bus helper
-│       ├── remindmeengine.{h,cpp}       # timer engine
-│       ├── remindmehelpermain.cpp       # helper entry point
-│       ├── remindmealarmdialog.{h,cpp}  # Snooze/Dismiss window
-│       ├── remindmeautostart.{h,cpp}    # session autostart toggling
-│       └── krunner-remindme.notifyrc
+│   │   ├── remindmealarmdialog.{h,cpp}  # Snooze/Dismiss window
+│   │   └── remindmeautostart.{h,cpp}    # session autostart toggling
+│   └── runner/                          # org.kde.krunner1 D-Bus runner adaptor
+│       ├── remindmeadaptor.{h,cpp}      # Match/Run/Actions/Config/Teardown
+│       └── remotematch.h                # D-Bus wire types for the runner protocol
+├── data/                                # installed data files (CC0-1.0)
+│   ├── plasma-runner-remindme.desktop   # DBus2 runner metadata
+│   └── krunner-remindme.notifyrc
 ├── autotests/                           # ctest: remindmetimetest, remindmeenginetest, remindmeautostarttest, remindmeintegrationtest
 ├── po/                                  # translations (Messages.sh + catalogs)
-├── packaging/                           # build.sh / install.sh / package.sh / org.kde.remindme.service.in
+├── packaging/                           # build.sh / install.sh / uninstall.sh / package.sh
 ├── LICENSES/                            # REUSE license texts
 ├── REUSE.toml
 └── README.md
@@ -60,12 +60,12 @@ remindme/
 ### Rules
 
 - The code is standalone: do **not** modify anything under `plasma-workspace/` — it is a read-only extraction source. Port code into `src/` instead.
-- Keep the component split in Target Layout: `common/` is shared by both targets; never duplicate shared sources into `runner/` or `helper/`.
+- Keep one executable: the timer engine, the `org.kde.krunner1` D-Bus runner adaptor and the alarm window live in the same process. Do not reintroduce a compiled KRunner plugin, a client/marshalling layer, a second target or a helper process.
 - Tooling is committed at the repo root (`CMakePresets.json`, `justfile`, `lefthook.yml`, `cog.toml`, `.clang-format`, `.clang-tidy`, `.yamllint`, `.ecrc`). Keep it working when targets or file types change; don't add a second task runner or hook manager.
 - Commit messages follow Conventional Commits (`cog verify`). Do not bypass hooks (`--no-verify`).
-- Follow KRunner/KF6 plugin conventions: SPDX headers, `#pragma once`, `KRunner::AbstractRunner`, `KPluginFactory`/`KPluginMetaData`, `QStringLiteral`, `i18n()`.
+- Follow KRunner/KF6 DBus-runner conventions: SPDX headers, `#pragma once`, `QDBusAbstractAdaptor`, `QStringLiteral`, `i18n()`. The runner is a D-Bus service (`io.github.dcog989.remindme`), not a compiled plugin.
 - Use ECM install-dir variables (`KDE_INSTALL_*`) rather than hardcoded paths, so user- and system-prefix installs both work.
-- Emulate existing test procedures: pure-logic unit tests, and D-Bus/plugin integration tests via a real subprocess (`krunner_configure_test` + `AbstractRunnerTest`). Don't invent new patterns where an existing one fits.
+- Emulate existing test procedures: pure-logic unit tests, and D-Bus runner integration tests via a real subprocess (`krunner_configure_test` + `AbstractRunnerTest` DBus branch). Don't invent new patterns where an existing one fits.
 - Run targeted tests, not the full `ctest` suite, on trivial changes.
 - Require confirmation for: adding/removing dependencies, and any operation outside the project root.
 

@@ -69,6 +69,10 @@
       "configurePreset": "release"
     },
     {
+      "name": "system",
+      "configurePreset": "system"
+    },
+    {
       "name": "asan",
       "configurePreset": "asan"
     }
