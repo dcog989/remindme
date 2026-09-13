@@ -110,12 +110,15 @@ void RemindmeAdaptor::Run(const QString &matchId, const QString &actionId)
         } else {
             m_engine->Show(id);
         }
-    } else if (matchId.startsWith(QLatin1String("cancelid"))) {
-        m_engine->Cancel(matchId.mid(8).toInt());
+    } else if (matchId.startsWith(QLatin1String("cancelid:"))) {
+        // Checked before the "cancel:" case below: both ids start with "cancel", so an
+        // explicit trailing ":" after each tag keeps the prefixes mutually exclusive
+        // regardless of check order.
+        m_engine->Cancel(matchId.mid(9).toInt());
     } else if (matchId.startsWith(QLatin1String("cancelmsg:"))) {
         m_engine->CancelByMessage(matchId.mid(10));
-    } else if (matchId.startsWith(QLatin1String("cancel"))) {
-        m_engine->Cancel(matchId.mid(6).toInt());
+    } else if (matchId.startsWith(QLatin1String("cancel:"))) {
+        m_engine->Cancel(matchId.mid(7).toInt());
     }
 }
 
@@ -264,7 +267,7 @@ void RemindmeAdaptor::addCancelMatches(RemoteMatches &matches, const QString &ta
             addSimpleMatch(matches, i18n("No timer with id %1", id), i18n("Use rme list to see timers"));
             return;
         }
-        match.id = QStringLiteral("cancelid%1").arg(id);
+        match.id = QStringLiteral("cancelid:%1").arg(id);
         // The "#" prefix mirrors how ids are shown in "rme list", marking this as an id
         match.text = i18n("Cancel timer #%1", idString);
         match.relevance = 0.8;
@@ -281,7 +284,7 @@ void RemindmeAdaptor::addCancelMatches(RemoteMatches &matches, const QString &ta
 void RemindmeAdaptor::addCancelTimerMatch(RemoteMatches &matches, const Remindme::TimerInfo &timer) const
 {
     RemoteMatch match;
-    match.id = QStringLiteral("cancel%1").arg(timer.id);
+    match.id = QStringLiteral("cancel:%1").arg(timer.id);
     match.text = timerText(timer);
     match.iconName = QStringLiteral("kronometer");
     match.categoryRelevance = categoryRelevanceHighest;
