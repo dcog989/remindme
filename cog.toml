@@ -13,7 +13,7 @@ skip_ci = "[skip ci]"
 skip_untracked = false
 tag_prefix = "v"
 
-pre_bump_hooks = []
+pre_bump_hooks = ["cmake --workflow --preset user"]
 post_bump_hooks = []
 
 [commit_types]
