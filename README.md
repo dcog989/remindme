@@ -1,16 +1,8 @@
 # remindme
 
-A third-party (user) [KRunner](https://userbase.kde.org/Plasma/Krunner) plugin for
-KDE Plasma 6 that adds timers. Type a trigger word (`remindme` or `rme`) followed
-by a duration and an optional message to start a countdown. When the time is up a
-dedicated alarm window pops up with **Snooze (+1 min)** and **Dismiss**. Active
-timers can be listed and cancelled from KRunner, and they survive KRunner
-restarts.
+A third-party (user) [KRunner](https://userbase.kde.org/Plasma/Krunner) plugin for KDE Plasma 6 that adds timers. Type a trigger word (`remindme` or `rme`) followed by a duration and an optional message to start a countdown. When the time is up a dedicated alarm window pops up with **Snooze (+1 min)** and **Dismiss**. Active timers can be listed and cancelled from KRunner, and they survive KRunner restarts.
 
-`remindme` is distributed through the [KDE Store](https://store.kde.org/) and is
-installable from KRunner's **Get New Plugins** flow. It is **not** part of KDE
-Plasma and is **not** shipped by the Plasma release; the plugin lives entirely in
-this standalone repository.
+`remindme` is distributed through the [KDE Store](https://store.kde.org/) and is installable from KRunner's **Get New Plugins** flow. It is **not** part of KDE Plasma and is **not** shipped by the Plasma release; the plugin lives entirely in this standalone repository.
 
 ## Usage
 
@@ -28,8 +20,7 @@ Trigger words: `remindme`, `rme` (case-insensitive).
 | `4:15:30`     | 4 hours 15 minutes 30 seconds            |
 | `8 message`   | 8 minutes with the message `message`     |
 
-- A bare number means minutes. Fractional values (`.5`, `.5m`, `.5h`, …) are
-  accepted for bare numbers and unit forms, rounded to whole seconds.
+- A bare number means minutes. Fractional values (`.5`, `.5m`, `.5h`, …) are accepted for bare numbers and unit forms, rounded to whole seconds.
 - `0` (or any non-positive) duration is invalid; the maximum is `99:59:59`.
 - The message is everything after the duration and may contain spaces.
 
@@ -42,18 +33,10 @@ Trigger words: `remindme`, `rme` (case-insensitive).
 | List timers to cancel   | `rme cancel`          |
 | Usage / help            | `rme`                 |
 
-- Pressing Enter on a create match starts the timer. `rme list` shows each active
-  timer with its `#id` and reminder time; activating a timer pops up its alarm,
-  while its `✕` action cancels it. `rme cancel` with no target lists every timer
-  so one can be picked and cancelled.
-- "Cancel by message" matches the message *exactly* (case-sensitive), so a short
-  typo cannot cancel a large set of timers. Use `rme cancel <id>` or
-  `rme cancel #<id>` for a specific timer.
-- On expiry the alarm window opens with the message plus Snooze and Dismiss, and
-  plays a looping alarm sound until the window is closed.
-- Timers survive KRunner restarts and session logout: the runner process owns the
-  engine, persists timers to disk, and uses wall-clock deadlines (epoch), so
-  suspend and restart are handled naturally.
+- Pressing Enter on a create match starts the timer. `rme list` shows each active timer with its `#id` and reminder time; activating a timer pops up its alarm, while its `✕` action cancels it. `rme cancel` with no target lists every timer so one can be picked and cancelled.
+- "Cancel by message" matches the message *exactly* (case-sensitive), so a short typo cannot cancel a large set of timers. Use `rme cancel <id>` or `rme cancel #<id>` for a specific timer.
+- On expiry the alarm window opens with the message plus Snooze and Dismiss, and plays a looping alarm sound until the window is closed.
+- Timers survive KRunner restarts and session logout: the runner process owns the engine, persists timers to disk, and uses wall-clock deadlines (epoch), so suspend and restart are handled naturally.
 
 ## Install
 
@@ -66,14 +49,9 @@ Trigger words: `remindme`, `rme` (case-insensitive).
 
 ### From source
 
-Build dependencies: a C++20 compiler, CMake 3.29+, Qt 6.9+, KDE Frameworks 6
-(`CoreAddons`, `I18n`, `Notifications`, `Config`) and
-[Extra CMake Modules](https://invent.kde.org/frameworks/extra-cmake-modules).
-Building the tests additionally needs `KRunner` (for `AbstractRunnerTest`).
+Build dependencies: a C++20 compiler, CMake 3.29+, Qt 6.9+, KDE Frameworks 6 (`CoreAddons`, `I18n`, `Notifications`, `Config`) and [Extra CMake Modules](https://invent.kde.org/frameworks/extra-cmake-modules). Building the tests additionally needs `KRunner` (for `AbstractRunnerTest`).
 
-The build is driven by [CMake presets](CMakePresets.json), with a thin
-[`justfile`](justfile) for convenience. If you have
-[`just`](https://github.com/casey/just) installed:
+The build is driven by [CMake presets](CMakePresets.json), with a thin [`justfile`](justfile) for convenience. If you have [`just`](https://github.com/casey/just) installed:
 
 ```sh
 just configure          # cmake --preset user
@@ -89,15 +67,11 @@ cmake --build --preset user
 cmake --install build/user
 ```
 
-Presets: `user` (`~/.local`, Debug), `release`, `system` (`/usr`),
-`asan` (ASan + UBSan). Configure, build and test in one go with
-`just ci <preset>` or `cmake --workflow --preset user`.
+Presets: `user` (`~/.local`, Debug), `release`, `system` (`/usr`), `asan` (ASan + UBSan). Configure, build and test in one go with `just ci <preset>` or `cmake --workflow --preset user`.
 
-Because `remindme` is a D-Bus runner, a `~/.local` install needs no
-`QT_PLUGIN_PATH` and no sudo: KRunner scans
+Because `remindme` is a D-Bus runner, a `~/.local` install needs no `QT_PLUGIN_PATH` and no sudo: KRunner scans
 `~/.local/share/krunner/dbusplugins`, D-Bus scans
-`~/.local/share/dbus-1/services`, and the service `Exec=` is an absolute path.
-Restart KRunner afterwards so it reloads the runner list:
+`~/.local/share/dbus-1/services`, and the service `Exec=` is an absolute path. Restart KRunner afterwards so it reloads the runner list:
 
 ```sh
 kquitapp6 krunner && krunner &
