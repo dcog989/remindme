@@ -1,0 +1,15 @@
+#
+# Dependabot configuration. The only managed dependency set in this repo is the
+# GitHub Actions used by CI; everything else (Qt/KF6, Arch packages) is resolved
+# by the system package manager and is out of scope.
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+    labels:
+      - "dependencies"

@@ -155,9 +155,11 @@ available linters; `commit-msg` enforces
 Hooks for tools that are not installed are skipped, so a partial toolchain still
 works.
 
-Releases use the same convention: `cog bump --auto` bumps the `project()` version in
+Releases are one command: `cog bump --auto` bumps the `project()` version in
 `CMakeLists.txt` (the single source of truth, rendered into the runner metadata), updates
-`CHANGELOG.md` and creates a `v*` tag.
+`CHANGELOG.md`, builds the store payload, then pushes the branch and `v*` tag and opens a GitHub
+release with the payload attached. The [KDE Store](https://store.kde.org/) upload itself stays
+manual.
 
 Handy Arch packages:
 
