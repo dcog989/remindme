@@ -1,0 +1,5 @@
+#
+# typos configuration. CHANGELOG.md is generated from commit history by cocogitto and
+# embeds short commit hashes, which the spell checker reads as words (e.g. "ba").
+[files]
+extend-exclude = ["CHANGELOG.md"]
