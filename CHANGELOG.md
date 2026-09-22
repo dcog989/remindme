@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.2.4 - 2026-09-22
+
+- - -
+
 ## v0.2.3 - 2026-09-22
 #### CI
 - fix shellcheck findings in launcher and Messages.sh - (b7dd96d) - dcog989
