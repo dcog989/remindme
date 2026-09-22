@@ -7,7 +7,7 @@
 # Activation happens without a terminal, so build output goes to $PROJECTDIR/kns-build.log.
 set -euo pipefail
 
-project_dir="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)"
+project_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 build_dir="$project_dir/build/kns"
 binary="$build_dir/krunner-remindme"
 log="$project_dir/kns-build.log"
