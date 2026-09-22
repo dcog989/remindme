@@ -26,6 +26,8 @@ jobs:
             qt6-base krunner kcoreaddons ki18n knotifications kconfig \
             extra-cmake-modules
       - uses: actions/checkout@v5
+      - name: Mark the workspace as a safe git directory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Configure, build and test
         run: cmake --workflow --preset user
 
@@ -39,6 +41,8 @@ jobs:
           pacman -Syu --noconfirm --needed \
             git clang typos shellcheck yamllint editorconfig-checker
       - uses: actions/checkout@v5
+      - name: Mark the workspace as a safe git directory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: clang-format
         run: |
           files=$(git ls-files '*.c' '*.cc' '*.cpp' '*.cxx' '*.h' '*.hpp' '*.hxx')
