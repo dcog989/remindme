@@ -5,9 +5,11 @@
     "^dist/",
     "^\\.docs/",
     "^plasma-workspace/",
-    "^_install/"
+    "^_install/",
+    "^LICENSE$",
+    "^CHANGELOG\\.md$"
   ],
   "Disable": {
-    "Indentation": false
+    "Indentation": true
   }
 }

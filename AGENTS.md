@@ -59,7 +59,7 @@ remindme/
 
 - The code is standalone: do **not** modify anything under `plasma-workspace/` — it is a read-only extraction source. Port code into `src/` instead.
 - Keep one executable: the timer engine, the `org.kde.krunner1` D-Bus runner adaptor and the alarm window live in the same process. Do not reintroduce a compiled KRunner plugin, a client/marshalling layer, a second target or a helper process.
-- Tooling is committed at the repo root (`CMakePresets.json`, `justfile`, `lefthook.yml`, `cog.toml`, `.clang-format`, `.clang-tidy`, `.yamllint`, `.ecrc`). Keep it working when targets or file types change; don't add a second task runner or hook manager.
+- Tooling is committed at the repo root (`CMakePresets.json`, `justfile`, `lefthook.yml`, `cog.toml`, `.clang-format`, `.clang-tidy`, `.yamllint`, `.editorconfig-checker.json`). Keep it working when targets or file types change; don't add a second task runner or hook manager.
 - Commit messages follow Conventional Commits (`cog verify`). Do not bypass hooks (`--no-verify`).
 - Follow KRunner/KF6 DBus-runner conventions: `#pragma once`, `QDBusAbstractAdaptor`, `QStringLiteral`, `i18n()`. The runner is a D-Bus service (`io.github.dcog989.remindme`), not a compiled plugin.
 - Use ECM install-dir variables (`KDE_INSTALL_*`) rather than hardcoded paths, so user- and system-prefix installs both work.
