@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.2.0 - 2026-09-22
+#### Build
+- (**release**) publish from cog post_bump_hooks + dependabot - (836056f) - dcog989
+
+- - -
+
 ## v0.1.0 - 2026-09-22
 #### Features
 - (**packaging**) install via KRunner's Get New Plugins - (67c4300) - dcog989
