@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.29)
 
-project(remindme VERSION 0.2.5 LANGUAGES CXX)
+project(remindme VERSION 0.2.7 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.2.7 - 2026-09-22
+#### CI
+- (**release**) autostash before the pre-bump pull - (13da70a) - dcog989
+- (**release**) sync main before bumping - (8ba42d5) - dcog989
+
+- - -
+
 ## v0.2.5 - 2026-09-22
 #### CI
 - (**editorconfig**) disable indentation check and exclude generated files - (c5f5810) - dcog989
