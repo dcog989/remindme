@@ -2,7 +2,7 @@
 
 A third-party (user) [KRunner](https://userbase.kde.org/Plasma/Krunner) plugin for KDE Plasma 6 that adds timers. Type a trigger word (`remindme` or `rme`) followed by a duration and an optional message to start a countdown. When the time is up a dedicated alarm window pops up with **Snooze (+1 min)** and **Dismiss**. Active timers can be listed and cancelled from KRunner, and they survive KRunner restarts.
 
-`remindme` is distributed through the [KDE Store](https://store.kde.org/) and is installable from KRunner's **Get New Plugins** flow. It is **not** part of KDE Plasma and is **not** shipped by the Plasma release; the plugin lives entirely in this standalone repository.
+`remindme` is distributed through the [KDE Store](https://store.kde.org/) and is installable from KRunner's **Get New Plugins** flow. The store payload ships sources, so the runner is built on first use (see [Install](#install)). It is **not** part of KDE Plasma and is **not** shipped by the Plasma release; the plugin lives entirely in this standalone repository.
 
 ## Usage
 
@@ -46,6 +46,12 @@ Trigger words: `remindme`, `rme` (case-insensitive).
 2. Click **Get New Plugins…**.
 3. Search for **Remind me** and install it.
 4. Restart KRunner: `kquitapp6 krunner && krunner &` (or log out and back in).
+
+The store package ships sources: the first time KRunner activates the runner it is configured,
+built and installed into `~/.local` (no sudo), which needs the [build dependencies](#from-source)
+and can take a minute. The build runs without a terminal, so its output goes to
+`~/.local/share/krunner-sources/remindme-*/kns-build.log`. Try `rme 5` once; if nothing happens,
+check that log. Later activations start the installed binary directly.
 
 ### From source
 
@@ -101,6 +107,7 @@ packaging/uninstall.sh          # driven by the CMake install manifest
 ```text
 remindme/
 ├── CMakeLists.txt              # top-level project (ECM, KF6, options, subdirs)
+├── krunner-plugininstallerrc   # KRunner "Get New Plugins" install descriptor
 ├── src/
 │   ├── engine/                 # timer engine, alarm window, autostart, entry point
 │   │   ├── main.cpp                    # D-Bus service + engine + adaptor wiring
@@ -116,6 +123,7 @@ remindme/
 │   └── krunner-remindme.notifyrc       # notification/sound config
 ├── autotests/                  # ctest suite
 ├── packaging/                  # build.sh / install.sh / uninstall.sh / package.sh
+│   └── kns/                    # first-run build launcher for the store package
 ├── po/                         # translations (Messages.sh + catalogs)
 └── README.md
 ```
@@ -133,7 +141,7 @@ remindme/
 
 ### Git hooks
 
-Hooks are managed with [lefthook](https://lefthook.dev/) and installed once per
+Hooks are managed with [Lefthook](https://lefthook.dev/) and installed once per
 clone:
 
 ```sh
@@ -143,7 +151,7 @@ lefthook install
 Pre-commit formats C++ and shell files (re-staging the result) and runs the
 available linters; `commit-msg` enforces
 [Conventional Commits](https://www.conventionalcommits.org/) via
-[cocogitto](https://docs.cocogitto.io/) (`cog verify`); pre-push builds and tests.
+[Cocogitto](https://docs.cocogitto.io/) (`cog verify`); pre-push builds and tests.
 Hooks for tools that are not installed are skipped, so a partial toolchain still
 works.
 

@@ -21,6 +21,7 @@
 ```text
 remindme/
 ├── CMakeLists.txt                       # top-level project (ECM, KF6, options, subdirs)
+├── krunner-plugininstallerrc            # KRunner "Get New Plugins" install descriptor
 ├── src/
 │   ├── engine/                          # timer engine + alarm + entry point → krunner-remindme
 │   │   ├── main.cpp                     # D-Bus service, engine and adaptor wiring
@@ -37,6 +38,7 @@ remindme/
 ├── autotests/                           # ctest: remindmetimetest, remindmeenginetest, remindmeautostarttest, remindmeintegrationtest
 ├── po/                                  # translations (Messages.sh + catalogs)
 ├── packaging/                           # build.sh / install.sh / uninstall.sh / package.sh
+│   └── kns/                             # first-run build launcher for the store package
 └── README.md
 ```
 

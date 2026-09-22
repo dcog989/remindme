@@ -16,14 +16,16 @@ include(ECMGenerateDBusServiceFile)
 include(ECMAddTests)
 include(FeatureSummary)
 
-find_package(Qt6 6.9 REQUIRED COMPONENTS Core DBus Widgets Test)
-# Runner is needed by the integration test (AbstractRunnerTest / RunnerManager); the installed
-# runner itself does not link it.
-find_package(KF6 6.9 REQUIRED COMPONENTS CoreAddons I18n Notifications Config Runner)
+find_package(Qt6 6.9 REQUIRED COMPONENTS Core DBus Widgets)
+find_package(KF6 6.9 REQUIRED COMPONENTS CoreAddons I18n Notifications Config)
 
 add_subdirectory(src)
 
 if(BUILD_TESTING)
+    # Tests only; the installed runner does not link them.
+    # Qt6::Test for the unit tests; KF6::Runner for AbstractRunnerTest/RunnerManager.
+    find_package(Qt6 6.9 REQUIRED COMPONENTS Test)
+    find_package(KF6 6.9 REQUIRED COMPONENTS Runner)
     add_subdirectory(autotests)
 endif()
 

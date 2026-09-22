@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+#
+# D-Bus activation entry point for a "Get New Plugins" install. The store payload
+# ships sources, so the first activation configures, builds and installs the plugin
+# (into ~/.local, no sudo); later activations start the binary directly.
+#
+# Activation happens without a terminal, so build output goes to $PROJECTDIR/kns-build.log.
+set -euo pipefail
+
+project_dir="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)"
+build_dir="$project_dir/build/kns"
+binary="$build_dir/krunner-remindme"
+log="$project_dir/kns-build.log"
+
+build() {
+    echo "==> Configuring remindme"
+    cmake -S "$project_dir" -B "$build_dir" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_TESTING=OFF \
+        -DCMAKE_INSTALL_PREFIX="$HOME/.local" || return 1
+    echo "==> Building remindme"
+    cmake --build "$build_dir" --parallel || return 1
+    echo "==> Installing remindme"
+    cmake --install "$build_dir" || return 1
+}
+
+if [ ! -x "$binary" ]; then
+    if ! command -v cmake >/dev/null 2>&1; then
+        echo "remindme: cmake is required for the first run; see README.md for the build dependencies" >&2
+        exit 1
+    fi
+    if ! build >"$log" 2>&1; then
+        echo "remindme: build failed, see $log" >&2
+        exit 1
+    fi
+fi
+
+exec "$binary"
