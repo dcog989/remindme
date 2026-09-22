@@ -25,7 +25,7 @@ jobs:
             base-devel cmake ninja ccache \
             qt6-base krunner kcoreaddons ki18n knotifications kconfig \
             extra-cmake-modules
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Configure, build and test
         run: cmake --workflow --preset user
 
@@ -38,7 +38,7 @@ jobs:
         run: |
           pacman -Syu --noconfirm --needed \
             git clang typos shellcheck yamllint editorconfig-checker
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: clang-format
         run: |
           files=$(git ls-files '*.c' '*.cc' '*.cpp' '*.cxx' '*.h' '*.hpp' '*.hxx')
