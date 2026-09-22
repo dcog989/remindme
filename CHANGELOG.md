@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.2.1 - 2026-09-22
+#### CI
+- mark workspace as a safe git directory in containers - (1306e92) - dcog989
+- bump actions/checkout to v5 for Node 24 - (4e7758e) - dcog989
+
+- - -
+
 ## v0.2.0 - 2026-09-22
 #### Build
 - (**release**) publish from cog post_bump_hooks + dependabot - (836056f) - dcog989
