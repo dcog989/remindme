@@ -155,8 +155,9 @@ available linters; `commit-msg` enforces
 Hooks for tools that are not installed are skipped, so a partial toolchain still
 works.
 
-Releases use the same convention: `cog bump --auto` updates `CHANGELOG.md`,
-bumps the version and creates a `v*` tag.
+Releases use the same convention: `cog bump --auto` bumps the `project()` version in
+`CMakeLists.txt` (the single source of truth, rendered into the runner metadata), updates
+`CHANGELOG.md` and creates a `v*` tag.
 
 Handy Arch packages:
 

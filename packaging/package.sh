@@ -11,19 +11,28 @@ set -euo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$root"
 
-version="$(git describe --tags --abbrev=0 2>/dev/null || true)"
-version="${version#v}"
+for file in krunner-plugininstallerrc packaging/kns/krunner-remindme-launcher.sh data/plasma-runner-remindme.desktop; do
+    if ! git ls-files --error-unmatch "$file" >/dev/null 2>&1; then
+        echo "$file is not committed; commit it before packaging" >&2
+        exit 1
+    fi
+done
+
+# Single source of truth for the version: the project() declaration.
+version="$(sed -n 's/^project(remindme VERSION \([0-9.]*\).*/\1/p' CMakeLists.txt)"
 if [ -z "$version" ]; then
-    version="$(sed -n 's/^project(remindme VERSION \([0-9.]*\).*/\1/p' CMakeLists.txt)"
+    echo "could not read the version from project() in CMakeLists.txt" >&2
+    exit 1
 fi
 name="remindme-$version"
 out="dist/$name.tar.gz"
 
-if ! git ls-files --error-unmatch krunner-plugininstallerrc >/dev/null 2>&1; then
-    echo "krunner-plugininstallerrc is not committed; commit it before packaging" >&2
-    exit 1
-fi
+work="$(mktemp -d)"
+trap 'rm -rf "$work"' EXIT
+mkdir -p "$work/$name" dist
+git archive HEAD | tar -x -C "$work/$name"
+# Render the metadata the installer copies; the archive ships the template otherwise.
+sed -i "s/@PROJECT_VERSION@/$version/" "$work/$name/data/plasma-runner-remindme.desktop"
 
-mkdir -p dist
-git archive --format=tar.gz --prefix="$name/" -o "$out" HEAD
+tar -czf "$out" -C "$work" "$name"
 echo "==> $out"

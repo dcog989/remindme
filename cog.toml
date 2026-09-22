@@ -13,7 +13,13 @@ skip_ci = "[skip ci]"
 skip_untracked = false
 tag_prefix = "v"
 
-pre_bump_hooks = ["cmake --workflow --preset user"]
+# {{version}} is the target version. Keep project() the single source of truth: bump it here so
+# the generated runner metadata (data/plasma-runner-remindme.desktop) follows automatically, then
+# build and test that exact version.
+pre_bump_hooks = [
+    'sed -i -E "s/^(project\(remindme VERSION )[0-9.]+/\1{{version}}/" CMakeLists.txt',
+    "cmake --workflow --preset user",
+]
 post_bump_hooks = []
 
 [commit_types]

@@ -19,6 +19,14 @@ include(FeatureSummary)
 find_package(Qt6 6.9 REQUIRED COMPONENTS Core DBus Widgets)
 find_package(KF6 6.9 REQUIRED COMPONENTS CoreAddons I18n Notifications Config)
 
+# The runner metadata is generated from the project version so the two cannot drift.
+set(REMINDME_DESKTOP_FILE ${CMAKE_CURRENT_BINARY_DIR}/plasma-runner-remindme.desktop)
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/plasma-runner-remindme.desktop
+    ${REMINDME_DESKTOP_FILE}
+    @ONLY
+)
+
 add_subdirectory(src)
 
 if(BUILD_TESTING)

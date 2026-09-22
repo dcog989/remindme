@@ -18,5 +18,5 @@ target_include_directories(remindmeautostarttest PRIVATE ${REMINDME_ENGINE_DIR})
 # krunner-remindme is an executable).
 ecm_add_test(remindmeintegrationtest.cpp TEST_NAME remindmeintegrationtest LINK_LIBRARIES Qt6::Test Qt6::DBus KF6::Runner)
 krunner_configure_test(remindmeintegrationtest krunner-remindme
-    DESKTOP_FILE ${CMAKE_SOURCE_DIR}/data/plasma-runner-remindme.desktop
+    DESKTOP_FILE ${REMINDME_DESKTOP_FILE}
 )

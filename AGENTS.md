@@ -52,7 +52,7 @@ remindme/
 - Lint: `just lint`; missing tools are skipped. `just doctor` reports gaps.
 - Static analysis: `just tidy` (clang-tidy, config in `.clang-tidy`).
 - Git hooks: `lefthook.yml`; install once with `lefthook install`. Pre-commit formats/lints, `commit-msg` runs `cog verify`, pre-push builds and tests.
-- Releases: `cog bump --auto` (`cog.toml`) updates `CHANGELOG.md`, bumps the version and tags `v*`.
+- Releases: `cog bump --auto` (`cog.toml`) bumps the `project()` version in `CMakeLists.txt` (the single version source of truth), updates `CHANGELOG.md` and tags `v*`.
 - CI: `.github/workflows/ci.yml` (Arch container: build + test + lint).
 
 ### Rules

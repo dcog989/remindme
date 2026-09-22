@@ -39,7 +39,7 @@ ecm_generate_dbus_service_file(
     DESTINATION ${KDE_INSTALL_DBUSSERVICEDIR}
 )
 
-install(FILES ${CMAKE_SOURCE_DIR}/data/plasma-runner-remindme.desktop
+install(FILES ${REMINDME_DESKTOP_FILE}
     DESTINATION ${KDE_INSTALL_DATADIR}/krunner/dbusplugins
 )
 
