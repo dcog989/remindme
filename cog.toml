@@ -18,7 +18,7 @@ tag_prefix = "v"
 # build and test that exact version. Sync first so the release commit is built on the current
 # remote tip and the post-bump push is a fast-forward.
 pre_bump_hooks = [
-    "git pull --rebase origin main",
+    "git pull --rebase --autostash origin main",
     'sed -i -E "s/^project\(remindme VERSION [0-9.]+/project(remindme VERSION {{version}}/" CMakeLists.txt',
     "cmake --workflow --preset user",
 ]
